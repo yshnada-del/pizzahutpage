@@ -1,378 +1,326 @@
 import type { ReactNode } from "react";
+import coverPhoto from "./assets/pizzahut/project-cover.jpg";
+import finalCover from "./assets/pizzahut/final-cover.webp";
+import finalMobile from "./assets/pizzahut/final-mobile.webp";
+import researchMenuPrices from "./assets/pizzahut/research-menu-prices.png";
+import DesignSystem from "./DesignSystem";
+import DesignShowcase from "./DesignShowcase";
+import { personas, problems, projectPeriod, researchFindings, researchNotes } from "./caseStudy";
 
-type AssetModule = string;
-
-const imageModules = import.meta.glob<AssetModule>("./assets/pizzahut/*.{png,jpg,jpeg,webp}", {
-  eager: true,
-  import: "default",
-});
-
-const assetByName = new Map(
-  Object.entries(imageModules).map(([path, src]) => [path.split("/").pop() ?? path, src]),
+const screenshots = import.meta.glob<string>(
+  [
+    "./assets/pizzahut/pizzahut-wireframe-{main,menu,detail,cart,extra}.png",
+  ],
+  { eager: true, import: "default" },
 );
 
-type Screen = {
-  title: string;
-  label: string;
-  fileName: string;
-  description: string;
-};
-
-type Point = {
-  index: string;
-  title: string;
-  body: string;
-};
-
-type ProblemSolution = {
-  problem: string;
-  solution: string;
-};
-
-const overviewPoints: Point[] = [
-  {
-    index: "01",
-    title: "할인 정보와 메뉴가 한 화면에서 바로 이해될 수 있을까?",
-    body: "Clear Ordering Flow",
-  },
-  {
-    index: "02",
-    title: "이벤트, 메뉴, 주문 CTA가 서로 경쟁하고 있지는 않을까?",
-    body: "Better Visual Hierarchy",
-  },
-  {
-    index: "03",
-    title: "사용자는 메뉴를 고른 뒤 바로 주문 행동으로 이어질 수 있을까?",
-    body: "Conversion-focused UX",
-  },
-  {
-    index: "04",
-    title: "복잡한 피자 주문 여정을 더 짧고 명확하게 만들 수 있을까?",
-    body: "Less Friction",
-  },
-];
-
-const businessProblems: ProblemSolution[] = [
-  {
-    problem: "메뉴와 할인 정보가 여러 영역에 흩어져 주문 진입 경로를 찾기 어려움",
-    solution: "할인, 인기 메뉴, 주문 CTA를 첫 화면의 핵심 흐름으로 통합",
-  },
-  {
-    problem: "이벤트, 메뉴, 배너가 동시에 노출되어 사용자의 시선이 분산됨",
-    solution: "대표 메뉴와 현재 혜택을 우선 노출하고 시선 흐름을 단순화",
-  },
-  {
-    problem: "페이지별 CTA 역할과 UI 규칙이 달라 주문 전환의 힘이 약함",
-    solution: "메뉴 탐색 이후 바로 주문으로 이어지는 일관된 CTA 체계 설계",
-  },
-];
-
-const personas = [
-  {
-    priority: "1순위 페르소나",
-    name: "김서연",
-    age: "24",
-    role: "대학생 / 취준생",
-    variant: "female",
-    avatarFileName: "persona-female.png",
-    quote: "할인만 딱 정리돼서 보이면 바로 주문할 텐데, 왜 이렇게 한 번에 안 보일까?",
-    pain:
-      "서연은 평소 배달 음식을 자주 시켜 먹지만 시험 기간이나 친구들과 모일 때 피자헛을 찾습니다. 쿠폰과 이벤트 정보를 비교해야 하는데, 혜택이 흩어져 있으면 금방 피로를 느끼고 주문을 미룹니다.",
-    keywords: ["할인 정보 확인", "쿠폰 비교", "가격 대비 혜택", "빠른 주문 진입"],
-  },
-  {
-    priority: "2순위 페르소나",
-    name: "박민준",
-    age: "30",
-    role: "회사원",
-    variant: "male",
-    avatarFileName: "persona-male.png",
-    quote: "주문하려고 들어왔는데 생각보다 뭘 눌러야 할지 헷갈린다.",
-    pain:
-      "민준은 피자를 자주 먹는 편은 아니지만 야근이나 주말에 빠르게 주문하고 싶을 때 피자헛을 찾습니다. 이미 주문 의사는 있지만 메뉴 탐색이 길어지거나 버튼이 명확하지 않으면 답답함을 느낍니다.",
-    keywords: ["빠른 메뉴 접근", "명확한 CTA", "선택 단계 최소화", "직접 주문 흐름"],
-  },
-];
-
-const wireframes: Screen[] = [
-  { title: "Main", label: "Wireframe", fileName: "pizzahut-wireframe-main.png", description: "" },
-  { title: "Menu", label: "Wireframe", fileName: "pizzahut-wireframe-menu.png", description: "" },
-  { title: "Detail", label: "Wireframe", fileName: "pizzahut-wireframe-detail.png", description: "" },
-  { title: "Cart", label: "Wireframe", fileName: "pizzahut-wireframe-cart.png", description: "" },
-  { title: "Login", label: "Wireframe", fileName: "pizzahut-wireframe-login.png", description: "" },
-  { title: "Order", label: "Wireframe", fileName: "pizzahut-wireframe-order.png", description: "" },
-  { title: "Extra", label: "Wireframe", fileName: "pizzahut-wireframe-extra.png", description: "" },
-];
-
-const beforeAfterPairs = [
-  {
-    title: "Main Page",
-    beforeFileName: "pizzahut-before-main.png",
-    afterFileName: "pizzahut-screen-main.png",
-    beforeSummary:
-      "기존 메인 페이지는 로그인 혜택, 제휴 배너, 가맹점 모집 등 부가 정보의 비중이 커서 사용자가 가장 먼저 확인해야 할 대표 메뉴와 주문 동선이 잘 드러나지 않았습니다.",
-    afterSummary:
-      "리뉴얼에서는 사용자의 주요 목적을 메뉴 확인과 빠른 주문으로 보고, 대표 메뉴와 주문 CTA를 중심으로 화면을 재구성했습니다. 가맹점 모집과 단체 주문은 중간 영역에 간결하게 배치하고, 이벤트·프로모션은 카드형으로 정리해 혜택을 한눈에 확인할 수 있도록 개선했습니다.",
-  },
-  {
-    title: "Menu Page",
-    beforeFileName: "pizzahut-before-menu.png",
-    afterFileName: "pizzahut-screen-menu.png",
-    beforeSummary:
-      "기존 메뉴 페이지는 인기 메뉴 안에 신메뉴가 함께 노출되어 메뉴 분류가 명확하지 않았습니다. 또한 가격 정보가 세로로 길게 배치되어 있어 사용자가 메뉴별 가격을 한눈에 비교하기 어려웠습니다.",
-    afterSummary:
-      "리뉴얼에서는 인기 메뉴, 신메뉴, 전체 메뉴를 구분해 사용자가 원하는 메뉴를 더 쉽게 탐색할 수 있도록 개선했습니다. 가격 정보는 가로형으로 정리해 메뉴별 가격을 빠르게 비교하고 확인할 수 있도록 구성했습니다.",
-  },
-  {
-    title: "Detail Page",
-    beforeFileName: "pizzahut-before-detail.png",
-    afterFileName: "pizzahut-screen-detail.png",
-    beforeSummary:
-      "기존 상세 페이지는 도우, 토핑, 사이드, 음료 등 선택 옵션이 한 화면에 모두 나열되어 있어 화면이 길어지고 정보가 복잡하게 느껴졌습니다. 사용자는 원하는 옵션을 찾기 위해 많은 스크롤을 해야 했고, 선택 과정의 집중도가 떨어질 수 있었습니다.",
-    afterSummary:
-      "리뉴얼에서는 사용자가 가장 먼저 선택해야 하는 도우 옵션을 우선 노출하고, 나머지 옵션은 필요할 때 클릭해서 확인할 수 있도록 구성했습니다. 이를 통해 화면을 더 깔끔하게 정리하고, 불필요한 스크롤을 줄여 사용자가 원하는 옵션만 선택하며 주문을 진행할 수 있도록 개선했습니다.",
-  },
-  {
-    title: "Product Info",
-    beforeFileName: "pizzahut-before-cart.png",
-    afterFileName: "pizzahut-screen-cart.png",
-    beforeSummary:
-      "기존 상세 페이지는 영양정보, 알레르기 정보, 원산지 정보를 각각 따로 확인해야 하는 구조였습니다. 사용자가 다른 정보를 보려면 현재 창을 닫고 다시 해당 버튼을 클릭해야 해서 확인 과정이 번거로웠습니다.",
-    afterSummary:
-      "리뉴얼에서는 영양정보, 알레르기 정보, 원산지 정보를 하나의 정보 박스로 통합했습니다. 한 번 클릭하면 같은 창 안에서 탭 전환만으로 필요한 정보를 확인할 수 있어, 반복적인 창 열기/닫기 과정을 줄이고 더 간편하게 상품 정보를 비교할 수 있도록 개선했습니다.",
-  },
-  {
-    title: "Login Page",
-    beforeFileName: "pizzahut-before-login.png",
-    afterFileName: "pizzahut-screen-login.png",
-    beforeSummary:
-      "기존 로그인 페이지는 휴대폰번호/이메일 로그인을 클릭한 뒤, 다음 화면으로 이동해야 실제 로그인을 진행할 수 있어 불필요한 단계가 있었습니다. 또한 비회원 주문 진입이 한눈에 드러나지 않아 주문을 빠르게 진행하기 어려웠습니다.",
-    afterSummary:
-      "리뉴얼에서는 로그인 입력창을 바로 노출해 사용자가 추가 클릭 없이 바로 로그인할 수 있도록 개선했습니다. 또한 회원 로그인과 비회원 주문을 탭으로 구분해, 로그인 사용자와 비회원 사용자 모두 자신의 상황에 맞게 빠르게 주문을 이어갈 수 있도록 구성했습니다.",
-  },
-];
-
-function getAsset(fileName: string) {
-  return assetByName.get(fileName);
-}
-
-function SectionIntro({
-  kicker,
-  title,
-  children,
+function Screenshot({
+  file, size, alt,
 }: {
-  kicker: string;
-  title: string;
-  children?: ReactNode;
+  file: string;
+  size: readonly [number, number];
+  alt: string;
 }) {
   return (
-    <header className="section-intro">
-      <span>{kicker}</span>
-      <h2>{title}</h2>
-      {children}
+    <img
+      src={screenshots["./assets/pizzahut/" + file]}
+      width={size[0]}
+      height={size[1]}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
+
+function SectionHeading({ label, title, children }: { label: string; title: string; children: ReactNode }) {
+  return (
+    <header className="section-heading">
+      <p className="section-label">{label}</p>
+      <h2 className="section-title">{title}</h2>
+      <p className="section-description">{children}</p>
     </header>
   );
 }
 
-function App() {
-  const heroCover = getAsset("main_pizzahut.png");
+const orderingFlow = [
+  {
+    title: "주문 시작",
+    steps: ["배달 또는 포장 선택", "선택한 방식으로 메뉴 목록 진입"],
+    branch: "홈에서 주소 입력",
+    branchSteps: "주소 입력 팝업 → 브라우저에 저장 → 홈에서 주소 확인",
+  },
+  {
+    title: "메뉴 목록",
+    steps: ["전체 메뉴 보기 · 분류 선택 · 메뉴명 검색", "상품 카드 선택"],
+    branch: "홈에서 바로 상품 보기",
+    branchSteps: "인기 메뉴 선택 → 해당 상품 상세",
+  },
+  {
+    title: "상품 상세",
+    steps: ["사이즈·엣지·수량 선택", "토핑·사이드 추가 (선택)", "선택 내역·합계 확인"],
+    branch: "상품 정보 확인",
+    branchSteps: "상품 정보 팝업 → 원산지·영양·알레르기 탭 전환 → 상세 화면",
+  },
+  {
+    title: "장바구니",
+    steps: ["상세에서 장바구니 담기", "담기 확인 → 장바구니 보기", "선택 내역·합계 확인", "메뉴 더 둘러보기 → 메뉴 목록"],
+    branch: "헤더에서 바로 확인",
+    branchSteps: "장바구니 아이콘 → 담아 둔 상품 확인",
+  },
+];
 
+const flowBackdrop = [
+  { file: "main", size: [1549, 3400] },
+  { file: "menu", size: [1920, 2405] },
+  { file: "detail", size: [1352, 3000] },
+  { file: "cart", size: [1352, 3000] },
+  { file: "extra", size: [1920, 2066] },
+] as const;
+
+function OrderFlowChart() {
   return (
-    <main>
-      <section className="hero">
-        {heroCover ? <img className="hero__cover" src={heroCover} alt="Pizza Hut web design case study cover" /> : null}
+    <section className="flow-board" id="flowchart" aria-labelledby="flow-title">
+      <div className="flow-board__backdrop" aria-hidden="true">
+        {flowBackdrop.map((view) => (
+          <Screenshot key={view.file} file={"pizzahut-wireframe-" + view.file + ".png"} size={view.size} alt="" />
+        ))}
+      </div>
+      <div className="shell flow-board__inner">
+        <header className="flow-board__heading">
+          <h2 className="section-label" id="flow-title">FLOW CHART &amp; WIREFRAME</h2>
+        </header>
+
+        <div className="flow-origin"><span>피자헛 홈</span></div>
+        <div className="flow-lanes">
+          {orderingFlow.map((lane) => (
+            <article className="flow-lane flow-lane--order" key={lane.title}>
+              <h3>{lane.title}</h3>
+              <ol className="flow-lane__steps">
+                {lane.steps.map((step) => <li key={step}>{step}</li>)}
+              </ol>
+              <div className="flow-lane__branch">
+                <h4>{lane.branch}</h4>
+                <p>{lane.branchSteps}</p>
+              </div>
+            </article>
+          ))}
+          <article className="flow-lane flow-lane--login">
+            <h3>로그인</h3>
+            <div className="flow-lane__entry-options">
+              <div><h4>회원 로그인</h4><p>데모 로그인 후 홈</p></div>
+              <div><h4>비회원 주문</h4><p>주문 방식을 유지해 메뉴 목록으로</p></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const researchVisuals = [
+  <ul className="research-benefits" key="benefits" aria-label="기존 사이트에서 혜택이 표시된 위치">
+    <li><span>프로모션 배너</span><strong>이벤트·제휴 혜택</strong></li>
+    <li><span>회원 안내 영역</span><strong>로그인 혜택</strong></li>
+  </ul>,
+  <img className="research-prices" key="prices" src={researchMenuPrices} alt="기존 메뉴 카드 두 개의 가격 영역. 각 상품의 사이즈별 배달·포장 가격이 세로로 이어집니다." width="615" height="344" loading="lazy" />,
+  <div className="research-dialogs" key="information">
+    <ul aria-label="개별 창으로 열리던 상품 정보">
+      <li>원산지</li>
+      <li>영양정보</li>
+      <li>알레르기</li>
+    </ul>
+    <p>다른 정보를 볼 때 열려 있는 창을 닫고 다시 선택</p>
+  </div>,
+];
+
+function ResearchSections() {
+  return (
+    <>
+      <section className="overview research-overview" id="overview" aria-labelledby="overview-title">
+        <div className="shell research-overview__inner">
+          <h2 className="section-label research-heading" id="overview-title">Overview</h2>
+          <div className="research-overview__copy">
+            <p>피자헛 웹사이트는 프로모션 확인부터 메뉴 선택, 배달 및 포장 주문까지 다양한 기능을 제공하고 있습니다. 하지만 주문 과정이 편리하지 않고, 필요한 정보를 확인하기 위해 여러 화면을 오가야 하는 번거로움이 있었습니다.</p>
+            <p>특히 혜택을 확인한 뒤에도 메뉴 가격이나 옵션, 주문 방법을 다시 확인해야 하는 점에 주목했습니다. 이러한 불편함을 줄이기 위해 필요한 정보를 한눈에 확인하고, 원하는 메뉴를 선택한 뒤 다음 단계까지 자연스럽게 이어질 수 있도록 주문 화면을 개선했습니다.</p>
+          </div>
+        </div>
       </section>
 
-      <section className="case-section case-section--light overview-showcase" id="overview">
-        <div className="container">
-          <header className="overview-head">
-            <span>Overview</span>
-            <h2>
-              복잡한 피자 주문,
-              <br />
-              더 쉽게 이어질 수 없을까?
-            </h2>
-            <p>
-              피자헛 리뉴얼 프로젝트는 기존 사이트에서 발견한 정보 과밀, 복잡한 메뉴 구조, 약한 주문 CTA 문제를
-              개선해 사용자가 할인 정보와 메뉴를 빠르게 이해하고 주문 행동으로 자연스럽게 이어지도록 설계한 UX/UI
-              리디자인입니다.
-            </p>
+      <section className="desk-research" id="problem" aria-labelledby="desk-research-title">
+        <div className="shell">
+          <header className="research-intro">
+            <p className="section-label research-heading">Desk research</p>
+            <h2 className="section-title" id="desk-research-title">기존 피자헛의 주문 화면을 살펴봤습니다</h2>
+            <p className="section-description">기존 사이트를 따라가며 혜택이 표시되는 위치, 메뉴별 가격을 읽는 순서, 상품 정보를 확인하는 방식을 비교했습니다.</p>
           </header>
-          <div className="overview-floating-list">
-            {overviewPoints.map((point) => (
-              <article className={`overview-note overview-note--${point.index}`} key={point.title}>
-                <i aria-hidden="true" />
-                <strong>{point.title}</strong>
+          <div className="research-evidence">
+            {problems.map((problem, index) => (
+              <article className="research-card" key={problem.area}>
+                <h3>{problem.area}</h3>
+                <div className="research-card__visual">{researchVisuals[index]}</div>
+                <p>{problem.observation}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="case-section case-section--cream" id="problem">
-        <div className="container">
-          <SectionIntro kicker="Design Process" title="분석부터 개선안까지 이어지는 디자인 과정">
-            <p>
-              기존 피자헛 사이트는 메뉴, 프로모션, 배너, 주문 기능이 한 화면에 많이 배치되어 사용자가 원하는 정보를
-              빠르게 찾기 어려웠습니다. 할인 중심 사용자와 빠른 주문 중심 사용자 모두에게 주문까지의 흐름이 명확하지
-              않다는 문제가 있었습니다.
-            </p>
-          </SectionIntro>
-          <div className="problem-goal-board">
-            <div className="problem-goal-board__labels">
-              <span>문제점</span>
-              <span>솔루션</span>
-            </div>
-            <div className="problem-goal-board__rows">
-              {businessProblems.map((item) => (
-                <div className="problem-goal-row" key={item.problem}>
-                  <div>{item.problem}</div>
-                  <div>{item.solution}</div>
-                </div>
-              ))}
-            </div>
-            <div className="problem-goal-board__arrow" aria-hidden="true">
-              <span />
-              <span />
-              <span />
-            </div>
-            <p className="problem-goal-board__result">
-              피자헛 리뉴얼은 <strong>정보를 덜어내는 것이 아니라, 주문 전환에 필요한 정보가 먼저 보이는 구조</strong>
-              로 사용자가 할인 확인부터 메뉴 선택, 주문 CTA까지 자연스럽게 이어지는 경험을 설계합니다.
-            </p>
-          </div>
+      <section className="user-research" id="user-research" aria-labelledby="user-research-title">
+        <div className="shell">
+          <header className="research-intro">
+            <p className="section-label research-heading">User research</p>
+            <h2 className="section-title" id="user-research-title">사용자 관점에서 본 주문의 불편</h2>
+            <p className="section-description">기존 화면에서 발견한 불편을 주문 상황별로 재구성한 가상 시나리오입니다.</p>
+          </header>
+          <ul className="review-list" role="list">
+            {researchNotes.map((note) => (
+              <li className="review-card" key={note.title}>
+                <h3>{note.title}</h3>
+                <blockquote>{note.quote}</blockquote>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
+    </>
+  );
+}
 
-      <section className="case-section case-section--light" id="persona">
-        <div className="container">
-          <header className="persona-head">
-            <span>Persona</span>
-            <h2>사용자 조사 기반 핵심 페르소나</h2>
-            <p>
-              피자헛 웹사이트 사용자는 할인 정보를 확인하려는 사용자와 빠르게 주문하려는 사용자로 나눌 수 있습니다.
-              서로 다른 목적을 갖지만 공통적으로 짧은 판단과 빠른 주문 흐름을 필요로 합니다.
-            </p>
-          </header>
-          <div className="persona-grid">
-            {personas.map((persona) => (
-              <article className={`persona-card persona-card--${persona.variant}`} key={persona.name}>
-                <div className="persona-card__visual">
-                  <div className="persona-avatar" aria-label={`${persona.name} 캐릭터 아이콘`}>
-                    {getAsset(persona.avatarFileName) ? (
-                      <img src={getAsset(persona.avatarFileName)} alt={`${persona.name} 캐릭터 아이콘`} loading="lazy" />
-                    ) : (
-                      <span />
-                    )}
-                  </div>
-                  <div className="persona-speech">“{persona.quote}”</div>
+function ResearchSynthesis() {
+  return (
+    <section id="process" aria-label="리서치 종합 및 개선 방향">
+      <div className="research-synthesis section">
+        <div className="shell">
+          <SectionHeading label="Insights" title="주문 흐름에서 발견한 다섯 가지 문제">
+            Overview에서 정리한 주문 흐름에 Desk research의 화면 관찰, User research의 가상 주문 시나리오, 두 페르소나의 목표를 대조했습니다.
+          </SectionHeading>
+          <ol className="research-findings">
+            {researchFindings.map((finding, index) => (
+              <li className="research-finding" key={finding.issue}>
+                <span className="finding-number" aria-hidden="true">{index + 1}</span>
+                <div>
+                  <p className="research-finding__context">{finding.context}</p>
+                  <h3>{finding.issue}</h3>
                 </div>
-                <div className="persona-card__body">
-                  <div className="persona-profile">
-                    <span>{persona.priority}</span>
-                    <h3>{persona.name}</h3>
-                    <p>
-                      {persona.age}세 · {persona.role}
-                    </p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+
+      <div className="solution-section section">
+        <div className="shell solution-board">
+          <SectionHeading label="Solution" title="기존 문제를 화면 개선으로 연결">
+            각 문제에 대응하는 개선 방향을 정리했습니다.
+          </SectionHeading>
+          <div className="solution-board__headings" aria-hidden="true"><span>AS-IS</span><span>TO-BE</span></div>
+          <ol className="solution-stack">
+            {researchFindings.map((finding, index) => (
+              <li className="solution-row" key={finding.issue}>
+                <div className="solution-card solution-card--before" role="group" aria-label="AS-IS">
+                  <span className="finding-number" aria-hidden="true">{index + 1}</span>
+                  <div>
+                    <span className="solution-card__label" aria-hidden="true">AS-IS</span>
+                    <h3>{finding.issue}</h3>
+                    <p>{finding.current}</p>
                   </div>
-                  <div className="persona-pain">
-                    <h4>Pain point</h4>
-                    <p>{persona.pain}</p>
+                </div>
+                <span className="solution-row__connector" aria-hidden="true" />
+                <div className="solution-card solution-card--after" role="group" aria-label="TO-BE">
+                  <span className="finding-number" aria-hidden="true">{index + 1}</span>
+                  <div>
+                    <span className="solution-card__label" aria-hidden="true">TO-BE</span>
+                    <h3>{finding.goal}</h3>
+                    <p>{finding.response}</p>
                   </div>
-                  <div className="persona-keywords">
-                    <h4>Key words</h4>
-                    <ul>
-                      {persona.keywords.map((keyword) => (
-                        <li key={keyword}>{keyword}</li>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function App() {
+  return (
+    <>
+      <main>
+        <header className="hero" aria-labelledby="hero-title">
+          <div className="shell hero__inner">
+            <div className="hero__copy">
+              <h1 id="hero-title" aria-describedby="hero-project" lang="en">Pizza H<span className="hero__title-front">ut</span></h1>
+              <p className="hero__project" id="hero-project">웹사이트 리뉴얼</p>
+              <p className="hero__period"><strong>작업기간</strong> <span>{projectPeriod}</span></p>
+            </div>
+            <div className="hero__visual">
+              <div className="hero__photo"><img src={coverPhoto} alt="" width="1536" height="1024" fetchPriority="high" /></div>
+              <figure className="hero__browser">
+                <img src={finalCover} alt="최종 메인 화면. 신메뉴 배너 아래에 배달·포장 주문과 주소 입력이 배치되어 있습니다." width="1440" height="900" fetchPriority="high" />
+              </figure>
+              <figure className="hero__phone">
+                <img src={finalMobile} alt="모바일에서 본 리뉴얼 메인 첫 화면" width="390" height="844" />
+              </figure>
+            </div>
+          </div>
+        </header>
+
+        <ResearchSections />
+
+        <section className="persona-section section" id="persona" aria-labelledby="persona-title">
+          <div className="shell">
+            <h2 className="section-label persona-section__title" id="persona-title">PERSONA</h2>
+            <div className="persona-grid">
+              {personas.map((persona) => (
+                <article className="persona" key={persona.name}>
+                  <div className="persona__identity">
+                    <ul className="persona__tags" aria-label="주문 키워드">
+                      {persona.tags.map((tag) => <li key={tag}>#{tag}</li>)}
+                    </ul>
+                    <header className="persona__header">
+                      <img src={persona.image} alt="" width="140" height="140" loading="lazy" />
+                      <h3>{persona.name}</h3>
+                      <p className="persona__profile">{persona.detail}</p>
+                      <p className="persona__type">{persona.type}</p>
+                    </header>
+                  </div>
+                  <div className="persona__body">
+                    <blockquote><span>{persona.quote[0]}</span><strong>{persona.quote[1]}</strong></blockquote>
+                    <div className="persona__comparison-labels" aria-hidden="true">
+                      <span>PAIN POINT</span><span>NEEDS</span>
+                    </div>
+                    <ul className="persona__pairs">
+                      {persona.pairs.map(([pain, need]) => (
+                        <li key={pain}>
+                          <p><span>기존의 불편</span>{pain}</p>
+                          <p><span>필요한 경험</span>{need}</p>
+                        </li>
                       ))}
                     </ul>
+                    <dl className="persona__details">
+                      <div><dt>주문 상황</dt><dd>{persona.situation}</dd></div>
+                      <div><dt>주문 목표</dt><dd>{persona.goal}</dd></div>
+                    </dl>
                   </div>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="case-section case-section--cream wireframe-section" id="wireframe">
-        <div className="container">
-          <SectionIntro kicker="Wireframe" title="주문 흐름을 화면 단위로 정리한 와이어프레임">
-            <p>
-              메인에서 메뉴 탐색, 상세 선택, 장바구니와 로그인으로 이어지는 핵심 여정을 한눈에 확인할 수 있도록 화면
-              구조를 정리했습니다.
-            </p>
-          </SectionIntro>
-          <div className="wireframe-collage">
-            {wireframes.map((screen, index) => (
-              <figure className={`wireframe-shot wireframe-shot--${index + 1}`} key={screen.fileName}>
-                {getAsset(screen.fileName) ? (
-                  <img src={getAsset(screen.fileName)} alt={`${screen.title} wireframe`} loading="lazy" />
-                ) : (
-                  <div className="placeholder">
-                    <strong>{screen.fileName}</strong>
-                  </div>
-                )}
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
+        <ResearchSynthesis />
 
-      <section className="case-section before-after-section" id="design">
-        <div className="container">
-          <SectionIntro kicker="Before & After" title="기존 디자인과 리뉴얼 디자인 비교">
-            <p>
-              피자헛의 기존 화면과 리뉴얼 화면을 같은 흐름으로 나란히 배치해, 페이지별 구조와 시각적 변화가 한눈에
-              보이도록 정리했습니다.
-            </p>
-          </SectionIntro>
-          <div className="before-after-comparison">
-            {beforeAfterPairs.map((screen) => (
-              <article className="comparison-pair" key={screen.title}>
-                <div className="comparison-pair__title">
-                  <span>{screen.title}</span>
-                </div>
-                <div className="comparison-pair__row">
-                  <figure className="comparison-pair__shot">
-                    <figcaption>Before</figcaption>
-                    {getAsset(screen.beforeFileName) ? (
-                      <img src={getAsset(screen.beforeFileName)} alt={`${screen.title} before`} loading="lazy" />
-                    ) : (
-                      <div className="placeholder">
-                        <strong>{screen.beforeFileName}</strong>
-                      </div>
-                    )}
-                  </figure>
-                  <div className="comparison-pair__copy">
-                    <span>기존 디자인</span>
-                    <h3>{screen.title}</h3>
-                    <p>{screen.beforeSummary}</p>
-                  </div>
-                </div>
-                <div className="comparison-pair__row comparison-pair__row--reverse">
-                  <div className="comparison-pair__copy comparison-pair__copy--after">
-                    <span>리뉴얼 디자인</span>
-                    <h3>{screen.title}</h3>
-                    <p>{screen.afterSummary}</p>
-                  </div>
-                  <figure className="comparison-pair__shot comparison-pair__shot--after">
-                    <figcaption>After</figcaption>
-                    {getAsset(screen.afterFileName) ? (
-                      <img src={getAsset(screen.afterFileName)} alt={`${screen.title} after`} loading="lazy" />
-                    ) : (
-                      <div className="placeholder">
-                        <strong>{screen.afterFileName}</strong>
-                      </div>
-                    )}
-                  </figure>
-                </div>
-              </article>
-            ))}
-          </div>
+        <div id="wireframe">
+          <OrderFlowChart />
         </div>
-      </section>
 
-    </main>
+        <DesignSystem />
+
+        <DesignShowcase />
+      </main>
+    </>
   );
 }
 

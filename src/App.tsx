@@ -2,10 +2,11 @@ import type { ReactNode } from "react";
 import coverPhoto from "./assets/pizzahut/project-cover.jpg";
 import finalCover from "./assets/pizzahut/final-cover.webp";
 import finalMobile from "./assets/pizzahut/final-mobile.webp";
+import projectGoalIllustrations from "./assets/pizzahut/project-goal-illustrations.png";
 import researchMenuPrices from "./assets/pizzahut/research-menu-prices.png";
 import DesignSystem from "./DesignSystem";
 import DesignShowcase from "./DesignShowcase";
-import { personas, problems, projectPeriod, researchFindings, researchNotes } from "./caseStudy";
+import { deskResearch, personas, projectGoals, projectPeriod, researchFindings, researchNotes } from "./caseStudy";
 
 const screenshots = import.meta.glob<string>(
   [
@@ -118,21 +119,18 @@ function OrderFlowChart() {
   );
 }
 
-const researchVisuals = [
-  <ul className="research-benefits" key="benefits" aria-label="기존 사이트에서 혜택이 표시된 위치">
+const researchVisuals = {
+  benefits: <ul className="research-benefits" aria-label="기존 사이트에서 혜택이 표시된 위치">
     <li><span>프로모션 배너</span><strong>이벤트·제휴 혜택</strong></li>
     <li><span>회원 안내 영역</span><strong>로그인 혜택</strong></li>
   </ul>,
-  <img className="research-prices" key="prices" src={researchMenuPrices} alt="기존 메뉴 카드 두 개의 가격 영역. 각 상품의 사이즈별 배달·포장 가격이 세로로 이어집니다." width="615" height="344" loading="lazy" />,
-  <div className="research-dialogs" key="information">
-    <ul aria-label="개별 창으로 열리던 상품 정보">
-      <li>원산지</li>
-      <li>영양정보</li>
-      <li>알레르기</li>
-    </ul>
-    <p>다른 정보를 볼 때 열려 있는 창을 닫고 다시 선택</p>
-  </div>,
-];
+  prices: <img className="research-prices" src={researchMenuPrices} alt="기존 피자 메뉴 두 개의 사이즈별 배달·포장 가격 영역" width="615" height="344" loading="lazy" decoding="async" />,
+  information: <ul className="research-dialogs" aria-label="개별 창으로 열리던 상품 정보">
+    <li>원산지</li>
+    <li>영양정보</li>
+    <li>알레르기</li>
+  </ul>,
+};
 
 function ResearchSections() {
   return (
@@ -148,18 +146,22 @@ function ResearchSections() {
       </section>
 
       <section className="desk-research" id="problem" aria-labelledby="desk-research-title">
-        <div className="shell">
-          <header className="research-intro">
-            <p className="section-label research-heading">Desk research</p>
-            <h2 className="section-title" id="desk-research-title">기존 피자헛의 주문 화면을 살펴봤습니다</h2>
-            <p className="section-description">기존 사이트를 따라가며 혜택이 표시되는 위치, 메뉴별 가격을 읽는 순서, 상품 정보를 확인하는 방식을 비교했습니다.</p>
-          </header>
-          <div className="research-evidence">
-            {problems.map((problem, index) => (
-              <article className="research-card" key={problem.area}>
-                <h3>{problem.area}</h3>
-                <div className="research-card__visual">{researchVisuals[index]}</div>
-                <p>{problem.observation}</p>
+        <header className="shell">
+          <p className="section-label">Desk Research</p>
+          <h2 className="section-title" id="desk-research-title">피자헛 주문은 어디에서 막혔을까요?</h2>
+          <p className="section-description">기존 피자헛 웹사이트의 주문 흐름을 따라가며 혜택 확인, 메뉴 가격 비교, 상품 정보 확인에 필요한 단계를 살펴봤습니다.</p>
+        </header>
+        <div className="research-board">
+          <div className="shell research-evidence">
+            {deskResearch.map((finding) => (
+              <article className="research-item" key={finding.visual}>
+                <div className="research-card">
+                  <h3>{finding.title} <span>{finding.emphasis}</span></h3>
+                  <p className="research-card__source">{finding.area}</p>
+                  <div className="research-card__visual">{researchVisuals[finding.visual]}</div>
+                  <p className="research-card__observation">{finding.observation}</p>
+                </div>
+                <p className="research-takeaway">{finding.takeaway}</p>
               </article>
             ))}
           </div>
@@ -189,56 +191,81 @@ function ResearchSections() {
 
 function ResearchSynthesis() {
   return (
-    <section id="process" aria-label="리서치 종합 및 개선 방향">
-      <div className="research-synthesis section">
-        <div className="shell">
-          <SectionHeading label="Insights" title="주문 흐름에서 발견한 다섯 가지 문제">
-            Overview에서 정리한 주문 흐름에 Desk research의 화면 관찰, User research의 가상 주문 시나리오, 두 페르소나의 목표를 대조했습니다.
-          </SectionHeading>
-          <ol className="research-findings">
-            {researchFindings.map((finding, index) => (
-              <li className="research-finding" key={finding.issue}>
-                <span className="finding-number" aria-hidden="true">{index + 1}</span>
-                <div>
-                  <p className="research-finding__context">{finding.context}</p>
-                  <h3>{finding.issue}</h3>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-
-      <div className="solution-section section">
+    <div id="process">
+      <section className="solution-section section" aria-label="Problem / Solution">
         <div className="shell solution-board">
-          <SectionHeading label="Solution" title="기존 문제를 화면 개선으로 연결">
-            각 문제에 대응하는 개선 방향을 정리했습니다.
+          <SectionHeading label="Problem / Solution" title="기존 문제를 화면 개선으로 연결">
+            원 안에 기존 주문의 문제를, 바로 아래에 해당 문제를 해결할 개선안을 정리했습니다.
           </SectionHeading>
-          <div className="solution-board__headings" aria-hidden="true"><span>AS-IS</span><span>TO-BE</span></div>
-          <ol className="solution-stack">
+          <ol className="solution-pairs" role="list">
             {researchFindings.map((finding, index) => (
-              <li className="solution-row" key={finding.issue}>
-                <div className="solution-card solution-card--before" role="group" aria-label="AS-IS">
-                  <span className="finding-number" aria-hidden="true">{index + 1}</span>
-                  <div>
-                    <span className="solution-card__label" aria-hidden="true">AS-IS</span>
+              <li className="solution-pair" key={finding.issue}>
+                <div className="solution-pair__problem" style={{ zIndex: researchFindings.length - index }} role="group" aria-label="문제점">
+                  <div className="solution-pair__problem-copy">
                     <h3>{finding.issue}</h3>
                     <p>{finding.current}</p>
                   </div>
                 </div>
-                <span className="solution-row__connector" aria-hidden="true" />
-                <div className="solution-card solution-card--after" role="group" aria-label="TO-BE">
-                  <span className="finding-number" aria-hidden="true">{index + 1}</span>
-                  <div>
-                    <span className="solution-card__label" aria-hidden="true">TO-BE</span>
-                    <h3>{finding.goal}</h3>
-                    <p>{finding.response}</p>
-                  </div>
+                <span className="solution-pair__arrow" aria-hidden="true" />
+                <div className="solution-pair__response" role="group" aria-label="솔루션">
+                  <h4>{finding.goal}</h4>
+                  <p>{finding.response}</p>
                 </div>
               </li>
             ))}
           </ol>
         </div>
+      </section>
+
+      <section className="research-insight" id="insights" aria-labelledby="research-insight-title">
+        <div className="shell solution-board insight-connector" aria-hidden="true">
+          <div className="insight-connector__arms">
+            <span className="insight-connector__arm" />
+            <span className="insight-connector__arm" />
+          </div>
+          <span className="insight-connector__point" />
+        </div>
+        <header className="shell research-insight__copy">
+          <p className="section-label">Insight</p>
+          <h2 className="section-title" id="research-insight-title">
+            <span>선택에 필요한 정보가 제때 보이면,</span>{" "}
+            <span>피자를 고르는 흐름이 주문까지 이어집니다.</span>
+          </h2>
+        </header>
+      </section>
+    </div>
+  );
+}
+
+function ProjectGoal() {
+  return (
+    <section className="project-goal section" id="project-goal" aria-labelledby="project-goal-title">
+      <div className="shell">
+        <header className="project-goal__intro">
+          <p className="section-label">Project Goal</p>
+          <h2 className="section-title" id="project-goal-title">피자헛 주문 경험의 7가지 목표</h2>
+          <p className="section-description">혜택을 확인하는 첫 화면부터 장바구니에 담기까지, 주문에 필요한 정보를 쉽게 찾고 다음 단계로 이어갈 수 있도록 설계했습니다.</p>
+        </header>
+        <ol className="project-goals" role="list">
+          {projectGoals.map((goal, index) => (
+            <li className="project-goal-card" key={goal.title}>
+              <div>
+                <p className="project-goal-card__number" aria-hidden="true">Goal {index + 1}</p>
+                <h3>{goal.title}</h3>
+              </div>
+              <div className="project-goal-card__illustration" aria-hidden="true">
+                <img
+                  src={projectGoalIllustrations}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  style={{ left: `${-100 * goal.illustration[0]}%`, top: `${-100 * goal.illustration[1]}%` }}
+                />
+              </div>
+              <p className="project-goal-card__description">{goal.description}</p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
@@ -311,6 +338,7 @@ function App() {
         </section>
 
         <ResearchSynthesis />
+        <ProjectGoal />
 
         <div id="wireframe">
           <OrderFlowChart />

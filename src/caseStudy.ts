@@ -3,20 +3,32 @@ import personaMale from "./assets/pizzahut/persona-male.png";
 
 export const projectPeriod = "2026.02.09 ~ 2026.02.25";
 
-export const problems = [
+export const deskResearch = [
   {
-    area: "메인 · 혜택 확인",
-    observation: "할인 정보가 이벤트, 로그인 혜택, 제휴 배너에 나뉘어 있었습니다. 어떤 메뉴에 어떤 혜택을 적용할 수 있는지 알아보려면 화면의 여러 영역을 오가야 했습니다.",
+    visual: "benefits",
+    area: "기존 피자헛 메인 화면",
+    title: "첫 화면에 흩어진",
+    emphasis: "할인·제휴 혜택",
+    observation: "이벤트, 제휴 할인, 로그인 혜택이 여러 영역에 나뉘어 있어 적용할 수 있는 혜택을 한눈에 파악하기 어려웠습니다.",
+    takeaway: "적용 가능한 혜택을 한곳에",
   },
   {
-    area: "메뉴 · 상품 비교",
-    observation: "인기 메뉴에 신메뉴가 섞여 있었고, 한 메뉴의 가격 정보가 세로로 길게 배치되어 있었습니다. 메뉴가 달라질 때마다 사이즈에 해당하는 가격을 다시 찾아야 했습니다.",
+    visual: "prices",
+    area: "기존 피자헛 메뉴 목록",
+    title: "메뉴마다 다시 찾는",
+    emphasis: "사이즈별 가격",
+    observation: "메뉴 카드마다 사이즈별 배달·포장 가격이 세로로 이어져, 같은 사이즈의 가격을 비교할 때 각 카드에서 다시 찾아야 했습니다.",
+    takeaway: "같은 위치에서 메뉴 가격 비교",
   },
   {
-    area: "상품 상세 · 선택 및 확인",
-    observation: "도우와 추가 옵션이 길게 이어졌고, 원산지·영양·알레르기 정보는 각각 다른 창에 있었습니다. 회원 입력창과 비회원 주문 진입점도 처음부터 분명하게 보이지 않았습니다.",
+    visual: "information",
+    area: "기존 피자헛 상품 상세 화면",
+    title: "창을 바꿔야 볼 수 있는",
+    emphasis: "상품 정보",
+    observation: "도우와 추가 옵션이 길게 이어졌고, 원산지·영양·알레르기 정보는 각각 다른 창에 열려 항목을 바꿀 때마다 창을 닫아야 했습니다.",
+    takeaway: "한 창에서 상품 정보 전환",
   },
-];
+] as const;
 
 export const researchNotes = [
   { title: "오늘 받을 수 있는 할인은 어디 있나요?", quote: "이벤트 배너를 보고 들어왔는데 로그인 혜택도 따로 있어요. 지금 고른 피자에 어느 할인이 적용되는지 한눈에 보고 싶어요." },
@@ -29,41 +41,75 @@ export const researchNotes = [
 
 export const researchFindings = [
   {
-    context: "이벤트를 확인하고 배달이나 포장을 선택할 때",
     issue: "혜택과 주문 시작점이 흩어져 있습니다",
     current: "이벤트와 회원 혜택을 따로 살피고, 배달·포장으로 주문을 시작하는 위치를 다시 찾아야 합니다.",
     goal: "첫 화면에서 혜택 확인과 주문 시작",
     response: "현재 프로모션을 먼저 보여주고, 바로 아래에 배달·포장·주소 입력을 모읍니다.",
   },
   {
-    context: "후보 피자의 같은 사이즈 가격을 비교할 때",
     issue: "메뉴마다 가격을 다시 찾아야 합니다",
     current: "인기 메뉴와 신메뉴의 구분이 흐리고, 카드마다 세로로 나열된 가격을 읽어야 합니다.",
     goal: "같은 기준으로 메뉴와 가격 비교",
     response: "메뉴 분류와 이름 검색을 제공하고, 사이즈별 가격은 모든 상품 카드의 같은 위치에 둡니다.",
   },
   {
-    context: "도우를 고르고 장바구니에 담기 직전",
     issue: "필수 옵션과 합계 확인이 떨어져 있습니다",
     current: "도우와 추가 옵션이 길게 이어져 필요한 항목을 찾고 주문 금액을 확인하려면 화면을 내려야 합니다.",
     goal: "필수 옵션부터 선택하고 즉시 합계 확인",
     response: "사이즈와 도우를 먼저 보여주고, 추가 옵션은 필요할 때 펼칩니다. 하단에 선택 내역과 합계를 함께 표시합니다.",
   },
   {
-    context: "원산지를 확인하고 알레르기 정보를 볼 때",
     issue: "상품 정보를 바꿀 때마다 창을 다시 엽니다",
     current: "원산지·영양·알레르기가 별도 팝업에 있어 현재 창을 닫고 상세 화면에서 다시 선택해야 합니다.",
     goal: "상품 정보를 한 창에서 전환",
     response: "하나의 창에 원산지·영양·알레르기 탭을 두고, 같은 창에서 메뉴 분류도 바꿀 수 있게 합니다.",
   },
   {
-    context: "계정 없이 주문을 이어가고 싶을 때",
     issue: "비회원 주문 경로가 눈에 띄지 않습니다",
     current: "로그인 진입 후 한 단계 더 이동해야 입력창을 볼 수 있고, 비회원으로 진행할 위치도 분명하지 않습니다.",
     goal: "회원과 비회원 주문 경로를 한 화면에 표시",
     response: "로그인 입력창을 바로 보여주고, 회원 로그인과 비회원 주문을 같은 위치에서 고를 수 있게 합니다.",
   },
 ];
+
+// Illustration coordinates are zero-based column and row positions in the sprite sheet.
+export const projectGoals = [
+  {
+    title: "첫 화면에서 혜택 확인",
+    description: "메인 배너에서 진행 중인 프로모션을 바로 확인할 수 있게 합니다.",
+    illustration: [0, 0],
+  },
+  {
+    title: "배달·포장 주문 바로 시작",
+    description: "홈에서 배달·포장을 고르고, 배달 주소를 입력할 수 있게 합니다.",
+    illustration: [1, 0],
+  },
+  {
+    title: "메뉴를 찾고 가격 비교",
+    description: "메뉴 분류와 이름 검색을 제공하고, 사이즈별 가격을 같은 위치에 표시합니다.",
+    illustration: [2, 0],
+  },
+  {
+    title: "필수 옵션부터 간편하게 선택",
+    description: "사이즈와 도우를 먼저 고르고, 토핑과 사이드는 필요할 때 펼치게 합니다.",
+    illustration: [3, 0],
+  },
+  {
+    title: "선택 내역과 합계를 한눈에",
+    description: "장바구니에 담기 전 고른 옵션과 합계를 화면 하단에서 함께 확인할 수 있게 합니다.",
+    illustration: [0, 1],
+  },
+  {
+    title: "한 창에서 상품 정보 확인",
+    description: "원산지·영양·알레르기 정보를 하나의 창에서 탭으로 전환해 볼 수 있게 합니다.",
+    illustration: [1, 1],
+  },
+  {
+    title: "회원·비회원 주문 경로 안내",
+    description: "같은 화면에서 로그인하거나 비회원 주문으로 이어갈 수 있게 합니다.",
+    illustration: [2, 1],
+  },
+] as const;
 
 export const personas = [
   {
